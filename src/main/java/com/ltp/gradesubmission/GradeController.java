@@ -9,6 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import ch.qos.logback.core.joran.conditional.ElseAction;
 
 @Controller
 public class GradeController {
@@ -22,7 +25,11 @@ public class GradeController {
 
   // );
   
-
+  /**
+   * 
+   * @param model
+   * @return
+   */
   @GetMapping("/grades")
   public String getGrades(Model model) {
 
@@ -31,19 +38,50 @@ public class GradeController {
   return "grades";
 
   }
-
+  /**
+   * 
+   * @param model
+   * @param name
+   * @return
+   */
   @GetMapping("/form")
-  public String gradeForm(Model model) {
-    model.addAttribute("formObject", new Grade());
+  public String gradeForm(Model model, @RequestParam(required = false) String name) {
+    Grade grade = new Grade();
+    // bind the object to the model
+    model.addAttribute("formObject", 
+    getGradeIndex(name) == -1000 ? grade : studentList.get(getGradeIndex(name)));
     return "form";
   }
 
+  /**
+   * 
+   * @param grade
+   * @return String
+   */
   @PostMapping("/handleSubmit") 
-    public String submitForm(Grade grade) {
+  public String submitForm(Grade grade) {
+    int index = getGradeIndex(grade.getName());
+    if (index == -1000) {
       studentList.add(grade);
-       return "redirect:/grades";
-      
-    } 
+    }else{
+      studentList.set(index, grade);
+    }
+    return "redirect:/grades";
+    
+  } 
+  /**
+   * 
+   * @param name
+   * @return Integer
+   */
+  public Integer getGradeIndex(String name) {
+    for (int i = 0; i < studentList.size(); i++) {
+      if (studentList.get(i).getName().equals(name)) {
+        return i;
+      }
+    }
+    return -1000;
+  }
   
    
    
