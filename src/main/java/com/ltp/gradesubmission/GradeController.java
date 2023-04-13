@@ -60,7 +60,7 @@ public class GradeController {
   @PostMapping("/handleSubmit") 
   public String submitForm(Grade grade) {
     int index = getGradeIndex(grade.getId());
-    if (index == -Constants.NOT_FOUND ) {
+    if (index == Constants.NOT_FOUND ) {
       studentList.add(grade);
     }else{
       studentList.set(index, grade);
