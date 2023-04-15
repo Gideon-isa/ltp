@@ -48,7 +48,7 @@ public class GradeController {
   public String gradeForm(Model model, @RequestParam(required = false) String id) {
     int index = getGradeIndex(id);
     // bind the Grade object to the model with name "formObject"
-    model.addAttribute("formObject", index == Constants.NOT_FOUND ? new Grade() : index);
+    model.addAttribute("formObject", index == Constants.NOT_FOUND ? new Grade() : studentList.get(index) );
     return "form";
   }
 
