@@ -5,9 +5,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -24,6 +28,21 @@ public class GradeController {
   //   new Grade("Jonah", "Chemistry", "A")
 
   // );
+
+
+    /**
+   * 
+   * @param model
+   * @param name
+   * @return
+   */
+  @GetMapping("/")
+  public String gradeForm(Model model, @RequestParam(required = false) String id) {
+    int index = getGradeIndex(id);
+    // bind the Grade object to the model with name "formObject"
+    model.addAttribute("formObject", index == Constants.NOT_FOUND ? new Grade() : studentList.get(index) );
+    return "form";
+  }
   
   /**
    * 
@@ -38,19 +57,7 @@ public class GradeController {
   return "grades";
 
   }
-  /**
-   * 
-   * @param model
-   * @param name
-   * @return
-   */
-  @GetMapping("/")
-  public String gradeForm(Model model, @RequestParam(required = false) String id) {
-    int index = getGradeIndex(id);
-    // bind the Grade object to the model with name "formObject"
-    model.addAttribute("formObject", index == Constants.NOT_FOUND ? new Grade() : studentList.get(index) );
-    return "form";
-  }
+
 
   /**
    * 
@@ -58,7 +65,11 @@ public class GradeController {
    * @return String
    */
   @PostMapping("/handleSubmit") 
-  public String submitForm(Grade grade) {
+  public String submitForm(@Valid @ModelAttribute("formObject") Grade grade, BindingResult result) {
+    if (result.hasErrors()) {
+      return "form";
+    } 
+
     int index = getGradeIndex(grade.getId());
     if (index == Constants.NOT_FOUND ) {
       studentList.add(grade);

@@ -20,10 +20,18 @@
           <th>Score</th>
         </tr>
         <tr th:each="grade: ${grad}">
-          <td th:text="${grade.name}"></td>
+          <td th:text="${grade.name}"></td> 
           <td th:text="${grade.subject}"></td>
           <td th:text="${grade.score}"></td>
           <td><a role="button" class="update" th:href="@{/(id = ${grade.id})}">Update</a></td>
+          <!--
+          <tr th:each="grade: ${grad}">
+          <td th:text="*{name}"></td>   
+          <td th:text="*{subject}"></td>  
+          
+          This is produce errors because you cannot use this selection *{...} in a thymeleaf loop
+          ONLY Usable for object th:object
+        -->
         </tr>
       </table>
     </div>
