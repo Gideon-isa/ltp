@@ -1,4 +1,4 @@
-package com.ltp.gradesubmission;
+package com.ltp.gradesubmission.controller;
 
 
 import java.util.ArrayList;
@@ -15,12 +15,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ltp.gradesubmission.Constants;
+import com.ltp.gradesubmission.Grade;
+import com.ltp.gradesubmission.repository.GradeRepository;
+import com.ltp.gradesubmission.service.GradeService;
+
 import ch.qos.logback.core.joran.conditional.ElseAction;
 
 @Controller
 public class GradeController {
 
-  List<Grade> studentList = new ArrayList<>();
+  GradeService gradeService = new GradeService();
 
   // List<Grade> studentGrades = Arrays.asList(
   //   new Grade("Henry", "Computer Science", "A"),
@@ -38,9 +43,7 @@ public class GradeController {
    */
   @GetMapping("/")
   public String gradeForm(Model model, @RequestParam(required = false) String id) {
-    int index = getGradeIndex(id);
-    // bind the Grade object to the model with name "formObject"
-    model.addAttribute("formObject", index == Constants.NOT_FOUND ? new Grade() : studentList.get(index) );
+    model.addAttribute("formObject", gradeService.getGradeById(id));
     return "form";
   }
   
@@ -52,9 +55,9 @@ public class GradeController {
   @GetMapping("/grades")
   public String getGrades(Model model) {
 
-  model.addAttribute("grad", studentList);
-  
-  return "grades";
+    model.addAttribute("grad", gradeService.getGrades());
+    
+    return "grades";
 
   }
 
@@ -68,30 +71,14 @@ public class GradeController {
   public String submitForm(@Valid @ModelAttribute("formObject") Grade grade, BindingResult result) {
     if (result.hasErrors()) {
       return "form";
-    } 
-
-    int index = getGradeIndex(grade.getId());
-    if (index == Constants.NOT_FOUND ) {
-      studentList.add(grade);
-    }else{
-      studentList.set(index, grade);
     }
+    gradeService.submitGrade(grade);
+
     return "redirect:/grades";
     
   } 
-  /**
-   * 
-   * @param name
-   * @return Integer
-   */
-  public Integer getGradeIndex(String id) {
-    for (int i = 0; i < studentList.size(); i++) {
-      if (studentList.get(i).getId().equals(id)) {
-        return i;
-      }
-    }
-    return Constants.NOT_FOUND ;
-  }
+
+  
   
    
    
