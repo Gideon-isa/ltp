@@ -1,12 +1,9 @@
 package com.ltp.gradesubmission.controller;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,17 +12,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ltp.gradesubmission.Constants;
 import com.ltp.gradesubmission.Grade;
-import com.ltp.gradesubmission.repository.GradeRepository;
 import com.ltp.gradesubmission.service.GradeService;
-
-import ch.qos.logback.core.joran.conditional.ElseAction;
 
 @Controller
 public class GradeController {
 
-  GradeService gradeService = new GradeService();
+  @Autowired
+  GradeService gradeService;
 
   // List<Grade> studentGrades = Arrays.asList(
   //   new Grade("Henry", "Computer Science", "A"),
