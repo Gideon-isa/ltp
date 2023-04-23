@@ -12,6 +12,7 @@ import com.ltp.gradesubmission.repository.GradeRepository;
 
 @Service
 public class GradeService {
+  
     @Autowired
     GradeRepository gradeRepository;
     
